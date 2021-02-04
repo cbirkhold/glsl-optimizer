@@ -51,6 +51,10 @@ list(REMOVE_ITEM glsl_sources ${glsl_sources_remove})
 add_library(glsl_optimizer${ARCH_POSTFIX} ${glsl_sources})
 target_link_libraries(glsl_optimizer${ARCH_POSTFIX} glcpp-library${ARCH_POSTFIX} mesa${ARCH_POSTFIX})
 
+# Single lib combining all three of the above (for linux to workaround linking
+# problems but could become default for all).
+add_library(glsl_optimizer_combined${ARCH_POSTFIX} ${glcpp-library_sources} ${mesa_sources} ${glsl_sources})
+
 if(WIN32)
 	add_executable(glsl_compiler src/glsl/main.cpp src/getopt/getopt_long.c)
 else()
