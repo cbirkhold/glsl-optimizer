@@ -931,7 +931,7 @@ void ir_print_glsl_visitor::visit(ir_texture *ir)
 	ir->coordinate->accept(this);
 	
 	// lod
-	if (ir->op == ir_txl || ir->op == ir_txf)
+	if ((ir->op == ir_txl || ir->op == ir_txf) && ir_texture::has_lod(ir->sampler->type))
 	{
 		buffer.asprintf_append (", ");
 		ir->lod_info.lod->accept(this);
