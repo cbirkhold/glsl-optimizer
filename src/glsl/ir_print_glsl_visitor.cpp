@@ -1327,15 +1327,14 @@ void print_float (string_buffer& buffer, float f)
 	if (f != f)
 		strcpy(tmp, "(0.0/0.0)");
 
-	#if _MSC_VER
 	// While gcc would print something like 1.0e+07, MSVC will print 1.0e+007 -
-	// only for exponential notation, it seems, will add one extra useless zero. Let's try to remove
-	// that so compiler output matches.
+	// Remove leading zeroes from exponent across platforms.
 	if (posE != NULL)
 	{
 		if((posE[1] == '+' || posE[1] == '-') && posE[2] == '0')
 		{
 			char* p = posE+2;
+			while (p[1] == '0') ++p;
 			while (p[0])
 			{
 				p[0] = p[1];
@@ -1343,7 +1342,6 @@ void print_float (string_buffer& buffer, float f)
 			}
 		}
 	}
-	#endif
 
 	buffer.asprintf_append ("%s", tmp);
 
