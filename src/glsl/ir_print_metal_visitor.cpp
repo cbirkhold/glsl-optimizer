@@ -319,17 +319,29 @@ _mesa_print_ir_metal(exec_list *instructions,
 				c->get_array_element(i)->accept(&v);
 			}
 		}
-		else
+		else if (c->type->is_record())
 		{
-			assert(c->type->is_record());
-			bool first = true;
+			int i = 0;
+
 			foreach_in_list(ir_constant, inst, &c->components)
 			{
-				if (!first)
+				if (i > 0) {
 					v.buffer.asprintf_append (", ");
-				first = false;
+				}
+
+				// Hack to get (more) correct precision for constants.
+				ir_constant inst_ = (*inst);
+				if (inst->get_precision() == glsl_precision_undefined) {
+					inst_.set_precision(c->type->fields.structure[i].precision);
+					inst = &inst_;
+				}
+
 				inst->accept(&v);
+				++i;
+			}
 		}
+		else {
+			assert(false);
 		}
 		v.buffer.asprintf_append ("};\n");
 	}
