@@ -1112,6 +1112,18 @@ void ir_print_metal_visitor::visit(ir_expression *ir)
 	}
 	else if (ir->get_num_operands() == 2)
 	{
+		if (ir->operands[0] && ir->operands[1] && ir->operands[0]->type->is_vector() && ir->operands[1]->type->is_vector())
+		{
+			if (ir->operation == ir_binop_all_equal)
+			{
+				buffer.asprintf_append("all");
+			}
+			else if (ir->operation == ir_binop_any_nequal)
+			{
+				buffer.asprintf_append("any");
+			}
+		}
+
 		// regular binary operator
 		buffer.asprintf_append ("(");
 		if (ir->operands[0])
