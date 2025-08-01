@@ -12,7 +12,7 @@ void main ()
     discard;
   };
   vec4 enc_3;
-  enc_3 = (vec4(1.0, 255.0, 65025.0, 1.60581e+08) * (sqrt(
+  enc_3 = (vec4(1.0, 255.0, 65025.0, 1.60581e+8) * (sqrt(
     dot (tmpvar_1, tmpvar_1)
   ) * _LightPositionRange.w));
   vec4 tmpvar_4;

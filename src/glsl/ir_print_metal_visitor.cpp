@@ -329,7 +329,7 @@ _mesa_print_ir_metal(exec_list *instructions,
 					v.buffer.asprintf_append (", ");
 				first = false;
 				inst->accept(&v);
-			}
+		}
 		}
 		v.buffer.asprintf_append ("};\n");
 	}
