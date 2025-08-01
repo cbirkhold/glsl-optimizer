@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
+project(glsl-optimizer)
+
+set(OpenGL_GL_PREFERENCE GLVND)
+find_package(OpenGL REQUIRED)
 
 include_directories(include)
 include_directories(src/mesa)
@@ -6,15 +10,19 @@ include_directories(src/mapi)
 include_directories(src/glsl)
 include_directories(src)
 
+if(WIN32)
+	include_directories(src/getopt)
+endif()
+
 option (DEBUG "Enable debugging" FALSE)
 
 if(${DEBUG} MATCHES "on")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -DNDEBUG")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -DNDEBUG")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -DNDEBUG")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -DNDEBUG")
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 endif()
 
 file(GLOB glcpp-library_sources src/glsl/glcpp/*.c src/util/*.c)
@@ -31,17 +39,17 @@ list(REMOVE_ITEM glsl_sources ${glsl_sources_remove})
 add_library(glsl_optimizer ${glsl_sources})
 target_link_libraries(glsl_optimizer glcpp-library mesa)
 
+if(WIN32)
+add_executable(glsl_compiler src/glsl/main.cpp src/getopt/getopt_long.c)
+else()
 add_executable(glsl_compiler src/glsl/main.cpp)
+endif()
 target_link_libraries(glsl_compiler glsl_optimizer)
 
 file(GLOB glsl_test_sources tests/*.cpp)
 add_executable(glsl_test ${glsl_test_sources})
-target_link_libraries(glsl_test glsl_optimizer)
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    # OSX-specific build requirements
-    find_library(OpenGL_LIBRARY OpenGL )
-    target_link_libraries(glsl_test ${OpenGL_LIBRARY})
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+target_link_libraries(glsl_test PRIVATE glsl_optimizer)
+target_link_libraries(glsl_test PRIVATE OpenGL::GL)
 
 file(GLOB glslopt_sources contrib/glslopt/*.cpp)
 add_executable(glslopt ${glslopt_sources})
