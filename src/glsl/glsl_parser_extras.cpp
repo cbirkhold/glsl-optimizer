@@ -76,7 +76,7 @@ _mesa_glsl_parse_state::_mesa_glsl_parse_state(struct gl_context *_ctx,
 
    /* Set default language version and extensions */
    this->language_version = ctx->Const.ForceGLSLVersion ?
-                            ctx->Const.ForceGLSLVersion : 120;
+                            ctx->Const.ForceGLSLVersion : 130;
    this->es_shader = false;
    this->metal_target = false;
    this->had_version_string = false;

@@ -1,4 +1,4 @@
-varying vec2 uv;
+in vec2 uv;
 void main ()
 {
   float b_1;

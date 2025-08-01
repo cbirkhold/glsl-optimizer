@@ -7,7 +7,7 @@ void main ()
   vec3 tmpvar_1;
   tmpvar_1 = gl_TexCoord[0].xyz;
   float x_2;
-  x_2 = ((texture2D (_MainTex, gl_TexCoord[1].xy) * _Color).w - _Cutoff);
+  x_2 = ((texture (_MainTex, gl_TexCoord[1].xy) * _Color).w - _Cutoff);
   if ((x_2 < 0.0)) {
     discard;
   };
